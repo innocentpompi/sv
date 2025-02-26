@@ -1,14 +1,16 @@
 async function updateMemberStats() {
     const serverId = "1343698712643502183";
+
     try {
-        let response = await fetch(`https://discord.com/api/v9/guilds/${serverId}/widget.json`);
-        let data = await response.json();
+        // Fetch Online Members (Using Discord Widget API)
+        let widgetResponse = await fetch(`https://discord.com/api/v9/guilds/${serverId}/widget.json`);
+        let widgetData = await widgetResponse.json();
+        document.getElementById("member-count").innerText = widgetData.presence_count + " members online";
 
-        // Update Online Members
-        document.getElementById("member-count").innerText = data.presence_count + " members online";
-
-        // Update Total Members (Using the correct ID: membercount)
-        document.getElementById("membercount").innerText = data.members.length + " total members";
+        // Fetch Total Members (Using External API)
+        let totalResponse = await fetch(`https://discordlookup.mesavirep.xyz/v1/guilds/${serverId}`);
+        let totalData = await totalResponse.json();
+        document.getElementById("membercount").innerText = totalData.member_count + " total members";
 
     } catch (error) {
         document.getElementById("member-count").innerText = "Failed to fetch online members.";
